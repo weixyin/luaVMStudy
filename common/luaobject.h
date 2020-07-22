@@ -25,6 +25,17 @@ typedef struct lua_TValue
     int tt;
 }TValue;
 
+/*
+** Entries in the Lua stack
+*/
+typedef union StackValue {
+    TValue val;
+} StackValue;
+
+
+/* index to stack elements */
+typedef StackValue *StkId;
+#define s2v(o)	(&(o)->val)
 
 
 #endif 

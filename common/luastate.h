@@ -6,17 +6,32 @@
 #define LUA_EXTRASPACE sizeof(void*)
 #define G(L) ((L)->l_G)
 
+#define BASIC_STACK_SIZE        (2*LUA_MINSTACK)
+
 struct lua_State* lua_newstate(lua_Alloc alloc,void* ud);
+void lua_close(lua_State* L);
 
-
-typedef TValue* StkId;
+/*
+** Bits in CallInfo status
+*/
+#define CIST_OAH	(1<<0)	/* original value of 'allowhook' */
+#define CIST_C		(1<<1)	/* call is running a C function */
+#define CIST_HOOKED	(1<<2)	/* call is running a debug hook */
+#define CIST_YPCALL	(1<<3)	/* call is a yieldable protected call */
+#define CIST_TAIL	(1<<4)	/* call was tail called */
+#define CIST_HOOKYIELD	(1<<5)	/* last hook called yielded */
+#define CIST_FIN	(1<<6)  /* call is running a finalizer */
+#define CIST_TRAN	(1<<7)	/* 'ci' has transfer information */
+#if defined(LUA_COMPAT_LT_LE)
+#define CIST_LEQ	(1<<8)  /* using __lt for __le */
+#endif
 
 struct  CallInfo
 {
     StkId func;                     // 被调用函数在栈中的位置
     StkId top;                      // 被调用函数的栈顶位置
     int nresult;                    // 有多少个返回值
-    int callstatus;                 // 调用状态
+    unsigned short callstatus;                 // 调用状态
     struct CallInfo* next;          // 下一个调用
     struct CallInfo* previous;      // 上一个调用
 };

@@ -1,4 +1,6 @@
 #include "luastate.h"
+#include "luaobject.h"
+#include "luamem.h"
 
 typedef struct LX
 {
@@ -12,6 +14,29 @@ typedef struct LG
     global_State g;
 }LG;//lua_State和global_State绑一起避免内存碎片，减少重新分配时间
 
+static void stack_init(lua_State* L)
+{
+    L->stack = luaM_malloc_(L,BASIC_STACK_SIZE*sizeof(StackValue),0);
+    L->stack_size = BASIC_STACK_SIZE;
+    L->stack_last = L->stack + BASIC_STACK_SIZE - LUA_EXTRASPACE;
+    L->next = L->previous = NULL;
+    //L->status = LUA_OK;
+    L->errorjmp = NULL;
+    L->errorfunc= 0;
+
+    for (int i=0;i<L->stack_size;++i)
+    {
+        setnilvalue(s2v(L->stack +i));
+    }
+    L->top++;
+    L->ci = &L->base_ci;
+    L->ci->func = L->top;//???
+    L->ci->top = L->top + LUA_MINSTACK;
+    L->ci->previous = L->ci->next = NULL;
+    L->ci->nresult = 0;
+    setnilvalue(s2v(L->top));
+    L->ci->callstatus = CIST_C;
+}
 
 lua_State* lua_newstate(lua_Alloc alloc,void* ud)
 {
@@ -27,6 +52,7 @@ lua_State* lua_newstate(lua_Alloc alloc,void* ud)
     g->panic = NULL;
 
     L = &lg->l.l;
+
     G(L) = g;
     g->mainthread = L;
     stack_init(L);
@@ -35,24 +61,4 @@ lua_State* lua_newstate(lua_Alloc alloc,void* ud)
     
 };
 
-static void stack_init(lua_State* L)
-{
-    L->stack = (StkId)luaM_realloc(L,NULL,0,LUA_STACKSIZE*sizeof(TValue));
-    L->stack_size = LUA_STACKSIZE;
-    L->stack_last = L->stack + Lua_STACKSIZE - LUA_EXTRASPACE;
-    L->next = L->previous = NULL;
-    L->status = LUA_OK;
-    L->errorjmp = NULL;
-    L->errorfunc= 0;
 
-    int i;
-    for (i=0;i<L->stack_size;++i)
-    {
-        setnilvalue(L->stack +i);
-    }
-    L->top++;
-    L->ci = &L->base_ci;
-    L->ci->func = L->stack;//???
-    L->ci->top = L->stack + LUA_MINSTACK;
-    L->ci->previous = L->ci->next = NULL;
-}

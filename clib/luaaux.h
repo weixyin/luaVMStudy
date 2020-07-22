@@ -4,6 +4,6 @@
 #include "lua.h"
 
 struct lua_State* luaL_newstate();
-
+void luaL_close(lua_State* L);
 
 #endif
