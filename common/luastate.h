@@ -61,4 +61,10 @@ typedef struct global_State {
     lua_CFunction panic;            // 当调用LUA_THROW接口时，如果当前不处于保护模式，那么会直接调用panic函数
                                     // panic函数通常是输出一些关键日志
 } global_State;
+
+void increase_top(struct lua_State* L);
+void lua_pushinteger(struct lua_State* L, int integer);
+void lua_settop(lua_State* L);
+int lua_gettop(lua_State* L);
+void lua_pop(lua_State* L);
 #endif

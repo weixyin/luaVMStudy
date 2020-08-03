@@ -37,5 +37,14 @@ typedef union StackValue {
 typedef StackValue *StkId;
 #define s2v(o)	(&(o)->val)
 
+#define val_(o)		((o)->value)
+#define settt_(o,t)	((o)->tt=(t))
+
+#define setfvalue(o,x) {TValue *io=(o); val_(io).f=(x);settt_(io,LUA_TFUNCTION);}
+#define setnvalue(o,x) {TValue *io=(o); val_(io).n=(x);settt_(io,LUA_TNUMBER);}
+#define setbvalue(o,x) {TValue *io=(o); val_(io).b=(x);settt_(io,LUA_TBOOLEAN);}
+#define setnilvalue(o,x) {TValue *io=(o); val_(io).p=NULL;settt_(io,LUA_TNIL);}
+#define setpvalue(o,x) {TValue *io=(o); val_(io).p=(x);settt_(io,LUA_TLIGHTUSERDATA);}
+#define setivalue(o,x) {TValue *io=(o); val_(io).i=(x);settt_(io,LUA_NUMINT);}
 
 #endif 
