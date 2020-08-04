@@ -7,4 +7,6 @@
 
 void *luaM_malloc_ (lua_State *L, size_t size, int tag);
 
+#define luaM_new(L,t)		cast(t*, luaM_malloc_(L, sizeof(t), 0))
+
 #endif

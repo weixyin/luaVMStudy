@@ -26,7 +26,7 @@ void lua_close(lua_State* L);
 #define CIST_LEQ	(1<<8)  /* using __lt for __le */
 #endif
 
-struct  CallInfo
+typedef struct CallInfo
 {
     StkId func;                     // 被调用函数在栈中的位置
     StkId top;                      // 被调用函数的栈顶位置
@@ -34,7 +34,7 @@ struct  CallInfo
     unsigned short callstatus;                 // 调用状态
     struct CallInfo* next;          // 下一个调用
     struct CallInfo* previous;      // 上一个调用
-};
+}CallInfo;
 
 typedef struct lua_State
 {
@@ -64,7 +64,11 @@ typedef struct global_State {
 
 void increase_top(struct lua_State* L);
 void lua_pushinteger(struct lua_State* L, int integer);
-void lua_settop(lua_State* L);
+void lua_settop(lua_State* L,int index);
 int lua_gettop(lua_State* L);
 void lua_pop(lua_State* L);
+
+lua_Integer lua_tointegerx(struct lua_State* L, int idx);
+
+CallInfo *luaE_extendCI (lua_State *L);
 #endif

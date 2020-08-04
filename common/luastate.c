@@ -101,3 +101,62 @@ void lua_pushinteger(struct lua_State* L, int integer)
     increase_top(L);
 }
 
+void lua_settop(lua_State* L,int index)
+{
+    //assert(L->top)
+    L->top = L->top + index;
+}
+
+int lua_gettop(lua_State* L)
+{
+    //L->top->val
+    return 0;
+}
+
+void lua_pop(lua_State* L)
+{
+    lua_settop(L,-1);
+}
+
+static StkId index2addr(lua_State* L,int index)
+{
+    if (index >= 0)
+    {
+        //func to do
+    }
+    else
+    {
+        return L->top + index;
+    }
+    
+}
+
+lua_Integer lua_tointegerx(struct lua_State* L, int idx)
+{
+    lua_Integer ret = 0;
+    TValue* addr = s2v(index2addr(L, idx));
+    if (addr->tt == LUA_NUMINT)
+    {
+        ret = addr->value.i;
+    }
+    else
+    {
+        //error to do
+        ;
+    }
+    return ret;
+}
+
+CallInfo *luaE_extendCI (lua_State *L) {
+    CallInfo *ci;
+    //lua_assert(L->ci->next == NULL);
+    //luaE_enterCcall(L);
+    ci = (CallInfo*)luaM_malloc_(L, sizeof(CallInfo), 0);
+    //lua_assert(L->ci->next == NULL);
+    L->ci->next = ci;
+    ci->previous = L->ci;
+    ci->next = NULL;
+    //ci->u.l.trap = 0;
+    //L->nci++;
+    return ci;
+}

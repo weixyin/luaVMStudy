@@ -23,3 +23,9 @@ void luaL_close(lua_State* L)
 {
     lua_close(L);
 }
+
+lua_Integer luaL_tointeger(lua_State* L, int index)
+{
+    lua_Integer ret = lua_tointegerx(L,index);
+    return ret;
+}

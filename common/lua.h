@@ -27,6 +27,7 @@ static int POINTER_SIZE = sizeof(void*);
 /* minimum Lua stack available to a C function */
 #define LUA_MINSTACK	20
 
+#define LUA_MULTRET (-1)
 // lua number type 
 #define LUA_NUMINT (LUA_TNUMBER | (0 << 4))
 #define LUA_NUMFLT (LUA_TNUMBER | (1 << 4))
@@ -39,6 +40,8 @@ static int POINTER_SIZE = sizeof(void*);
 // string type 
 #define LUA_LNGSTR (LUA_TSTRING | (0 << 4))
 #define LUA_SHRSTR (LUA_TSTRING | (1 << 4))
+
+#define LUA_MAXCALLS 200
 
 /*
 ** Type for memory-allocation functions
